@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
 
 namespace Complete
 {
-    public class TankHealth : MonoBehaviour
+    public class TankHealth : MonoBehaviourPun, IPunObservable
     {
         public float m_StartingHealth = 100f;               // The amount of health each tank starts with.
         public Slider m_Slider;                             // The slider to represent how much health the tank currently has.
@@ -15,7 +16,7 @@ namespace Complete
         
         private AudioSource m_ExplosionAudio;               // The audio source to play when the tank explodes.
         private ParticleSystem m_ExplosionParticles;        // The particle system the will play when the tank is destroyed.
-        private float m_CurrentHealth;                      // How much health the tank currently has.
+        public float m_CurrentHealth;                      // How much health the tank currently has.
         private bool m_Dead;                                // Has the tank been reduced beyond zero health yet?
 
 
@@ -86,6 +87,18 @@ namespace Complete
 
             // Turn the tank off.
             gameObject.SetActive (false);
+        }
+
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        {
+            if (stream.IsWriting)
+            {
+                stream.SendNext(m_CurrentHealth);
+            }
+            else
+            {
+                this.m_CurrentHealth = (float)stream.ReceiveNext();
+            }
         }
     }
 }

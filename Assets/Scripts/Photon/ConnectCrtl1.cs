@@ -6,6 +6,8 @@ using Photon.Realtime;
 using System;
 using UnityEngine.UI;
 using TMPro;
+using Photon.Pun.Demo.SlotRacer;
+using System.Drawing;
 
 public enum RegionCode
 {
@@ -22,6 +24,7 @@ public class ConnectCrtl1 : MonoBehaviourPunCallbacks
     [SerializeField] string gameVersion = "1";
     [SerializeField]
     string regionCode = null;
+    [SerializeField] GameObject panelRoom;
     void Start()
     {
         PhotonNetwork.AutomaticallySyncScene = true;
@@ -60,6 +63,25 @@ public class ConnectCrtl1 : MonoBehaviourPunCallbacks
         GameObject.Find("Button").GetComponentInChildren<TextMeshProUGUI>().text = msg;
         GameObject.Find("Button").GetComponent<Button>().enabled = state;
     }
+
+    void ShowRoomPanel()
+    {
+        GameObject.Find("PanelConnect").SetActive(false);
+         panelRoom.SetActive(true);
+    }
+
+    public void SetColor(int index)
+    {
+        string color = GameObject.Find("DropdownColors").GetComponent<Dropdown>().options[index].text;
+
+        Debug.Log("Color: " + color);
+
+        var propsToSet = new ExitGames.Client.Photon.Hashtable() { { "color", color } };
+        PhotonNetwork.LocalPlayer.SetCustomProperties(propsToSet);
+
+    }
+
+ 
 
     #region monobehaviour callbacks
 
@@ -105,11 +127,29 @@ public class ConnectCrtl1 : MonoBehaviourPunCallbacks
         if (PhotonNetwork.CurrentRoom.PlayerCount == 2 && PhotonNetwork.IsMasterClient)
         {
             PhotonNetwork.LoadLevel("Game");
-            
+            //ShowRoomPanel();
+
+
 
         }
 
     }
 
+    public override void OnPlayerPropertiesUpdate(Player players, ExitGames.Client.Photon.Hashtable changedProps)
+    {
+        if (changedProps.ContainsKey("color"))
+
+        {
+            
+            //foreach (var player in PhotonNetwork.CurrentRoom.Players.Values)
+            //{
+
+                
+            //    string color = (string)player.CustomProperties["color"];
+            //    player.GetComponent<Renderer>().material = Resources.Load<Material>("Materials/" + color);
+            //}
+        }
+       
+    }
     #endregion
 }
