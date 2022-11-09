@@ -8,6 +8,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private Transform spawn1;
     [SerializeField] private Transform spawn2;
+
     void Start()
     {
         if (playerPrefab == null)
@@ -21,14 +22,6 @@ public class GameController : MonoBehaviour
             initData[0] = "Data instanciacion ";
 
             PhotonNetwork.Instantiate(playerPrefab.name, spawnPoint.position, Quaternion.identity,0,initData);
-        }
-
-       
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        }       
     }
 }

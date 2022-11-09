@@ -25,10 +25,12 @@ public class ConnectCrtl1 : MonoBehaviourPunCallbacks
     [SerializeField]
     string regionCode = null;
     [SerializeField] GameObject panelRoom;
+
     void Start()
     {
         PhotonNetwork.AutomaticallySyncScene = true;
     }
+
     public void SetRegion(int index)
     {
         RegionCode region = (RegionCode)index;
@@ -46,8 +48,9 @@ public class ConnectCrtl1 : MonoBehaviourPunCallbacks
         PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion = regionCode;
 
     }
+
     public void Connect()
-  {
+    {
         if (PhotonNetwork.IsConnected)
         {
             PhotonNetwork.JoinRandomRoom();
@@ -57,7 +60,8 @@ public class ConnectCrtl1 : MonoBehaviourPunCallbacks
             PhotonNetwork.ConnectUsingSettings();
             PhotonNetwork.GameVersion = gameVersion;
         }
-  }
+    }
+
     void SetButton(bool state, string msg)
     {
         GameObject.Find("Button").GetComponentInChildren<TextMeshProUGUI>().text = msg;
@@ -67,7 +71,7 @@ public class ConnectCrtl1 : MonoBehaviourPunCallbacks
     void ShowRoomPanel()
     {
         GameObject.Find("PanelConnect").SetActive(false);
-         panelRoom.SetActive(true);
+        panelRoom.SetActive(true);
     }
 
     public void SetColor(int index)
@@ -78,7 +82,6 @@ public class ConnectCrtl1 : MonoBehaviourPunCallbacks
 
         var propsToSet = new ExitGames.Client.Photon.Hashtable() { { "color", color } };
         PhotonNetwork.LocalPlayer.SetCustomProperties(propsToSet);
-
     }
 
  
