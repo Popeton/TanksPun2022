@@ -12,8 +12,6 @@ public class PowerUpSystem : MonoBehaviour, IOnEventCallback
     [SerializeField] GameObject cure;
     [SerializeField] Transform spawn;
     
-    
-
     private void OnEnable()
     {
         PhotonNetwork.AddCallbackTarget(this);
@@ -27,10 +25,10 @@ public class PowerUpSystem : MonoBehaviour, IOnEventCallback
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            GenarateCure();
+            GenerateCure();
         }
     }
-    private void GenarateCure()
+    private void GenerateCure()
     {
         RaiseEventOptions eventOptions = new RaiseEventOptions
         {
@@ -46,7 +44,7 @@ public class PowerUpSystem : MonoBehaviour, IOnEventCallback
         if (photonEvent.Code == CureEventCode)
         {
             Debug.Log("Generar CURA");
-            GameObject.Instantiate(cure, spawn.position, Quaternion.identity);
+            Instantiate(cure, spawn.position, Quaternion.identity);
         }
     }
 

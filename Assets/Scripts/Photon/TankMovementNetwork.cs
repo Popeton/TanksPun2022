@@ -68,6 +68,11 @@ namespace Complete
 
             // Store the original pitch of the audio source.
             m_OriginalPitch = m_MovementAudio.pitch;
+
+            if (photonView.IsMine)
+            {
+                ColorSystem.Instance.SetCustomColor(photonView.ViewID, PhotonNetwork.LocalPlayer.CustomProperties["color"].ToString());
+            }
         }
 
 
@@ -115,7 +120,6 @@ namespace Complete
             {
                 Move();
                 Turn();
-
             }
         }
 
@@ -145,8 +149,6 @@ namespace Complete
         public void OnPhotonInstantiate(PhotonMessageInfo info)
         {
             GameObject.Find("CameraRig").GetComponent<CameraControlNetwork>().SetCameraTargets();
-
-
         }
     }
 }

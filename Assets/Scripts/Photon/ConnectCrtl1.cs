@@ -22,9 +22,12 @@ public enum RegionCode
 public class ConnectCrtl1 : MonoBehaviourPunCallbacks
 {
     [SerializeField] string gameVersion = "1";
-    [SerializeField]
-    string regionCode = null;
-    [SerializeField] GameObject panelRoom;
+    [SerializeField] string regionCode = null;
+    [SerializeField] Button button;
+    [SerializeField] Button readyButton;
+    [SerializeField] private GameObject panelConnect;
+    [SerializeField] private GameObject panelRoom;
+    [SerializeField] TMP_Dropdown dropdownColors;
 
     void Start()
     {
@@ -62,37 +65,43 @@ public class ConnectCrtl1 : MonoBehaviourPunCallbacks
         }
     }
 
-    void SetButton(bool state, string msg)
-    {
-        GameObject.Find("Button").GetComponentInChildren<TextMeshProUGUI>().text = msg;
-        GameObject.Find("Button").GetComponent<Button>().enabled = state;
-    }
-
     void ShowRoomPanel()
     {
-        GameObject.Find("PanelConnect").SetActive(false);
+        panelConnect.SetActive(false);
         panelRoom.SetActive(true);
+    }
+
+    void SetButton(bool state, string msg)
+    {
+        button.GetComponentInChildren<TMP_Text>().text = msg;
+        button.enabled = state;
     }
 
     public void SetColor(int index)
     {
-        string color = GameObject.Find("DropdownColors").GetComponent<Dropdown>().options[index].text;
+        string color = dropdownColors.options[index].text;
 
-        Debug.Log("Color: " + color);
-
-        var propsToSet = new ExitGames.Client.Photon.Hashtable() { { "color", color } };
-        PhotonNetwork.LocalPlayer.SetCustomProperties(propsToSet);
+        if (color == "Colors")
+        {
+            readyButton.interactable = false;
+            Debug.Log("Choose a color please.");
+        }
+        else
+        {
+            Debug.Log("Color: " + color);
+            var propsToSet = new ExitGames.Client.Photon.Hashtable() { { "color", color } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(propsToSet);
+            readyButton.interactable = true;
+        }
     }
-
- 
 
     #region monobehaviour callbacks
 
     public override void OnConnectedToMaster()
     {
         Debug.Log("PUN Basics Tutorial/Launcher: OnConnectedMaster() was called by PUN");
+        ShowRoomPanel();
         SetButton(true, "LETS BATTLE!!");
-
     }
 
     public override void OnDisconnected(DisconnectCause cause)
@@ -114,45 +123,21 @@ public class ConnectCrtl1 : MonoBehaviourPunCallbacks
         Debug.Log("PUN Basics Tutorial/Launcher: OnJoinedRoom() called by PUN. Now this client is in a room.");
         SetButton(false, "Waiting Players");
 
-        if(PhotonNetwork.CurrentRoom.PlayerCount == 2)
+        if (PhotonNetwork.CurrentRoom.PlayerCount == 2)
         {
-            print("room ready");
-            
+            print("Room ready");
         }
-        
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
 
-        Debug.Log(newPlayer.NickName + " Se Ha unido al cuarto, Players: " + PhotonNetwork.CurrentRoom.PlayerCount);
+        Debug.Log(newPlayer.NickName + " Se ha unido al cuarto, Players: " + PhotonNetwork.CurrentRoom.PlayerCount);
 
         if (PhotonNetwork.CurrentRoom.PlayerCount == 2 && PhotonNetwork.IsMasterClient)
         {
             PhotonNetwork.LoadLevel("Game");
-            //ShowRoomPanel();
-
-
-
         }
-
-    }
-
-    public override void OnPlayerPropertiesUpdate(Player players, ExitGames.Client.Photon.Hashtable changedProps)
-    {
-        if (changedProps.ContainsKey("color"))
-
-        {
-            
-            //foreach (var player in PhotonNetwork.CurrentRoom.Players.Values)
-            //{
-
-                
-            //    string color = (string)player.CustomProperties["color"];
-            //    player.GetComponent<Renderer>().material = Resources.Load<Material>("Materials/" + color);
-            //}
-        }
-       
     }
     #endregion
 }

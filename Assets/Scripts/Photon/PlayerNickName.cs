@@ -8,6 +8,7 @@ public class PlayerNickName : MonoBehaviour
 {
     const string playerNamePrefKey = "PlayerName";
     [SerializeField] TMP_InputField inputField;
+
     void Start()
     {
         string defauldName = string.Empty;
