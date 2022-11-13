@@ -3,7 +3,7 @@ using Photon.Pun;
 
 namespace Complete
 {
-    public class TankMovementNetwork : MonoBehaviourPun,IPunInstantiateMagicCallback
+    public class TankMovementNetwork : MonoBehaviourPun, IPunInstantiateMagicCallback
     {
         public int m_PlayerNumber = 1;              // Used to identify which tank belongs to which player.  This is set by this tank's manager.
         public float m_Speed = 12f;                 // How fast the tank moves forward and back.
@@ -68,11 +68,6 @@ namespace Complete
 
             // Store the original pitch of the audio source.
             m_OriginalPitch = m_MovementAudio.pitch;
-
-            if (photonView.IsMine)
-            {
-                ColorSystem.Instance.SetCustomColor(photonView.ViewID, PhotonNetwork.LocalPlayer.CustomProperties["color"].ToString());
-            }
         }
 
 
@@ -149,6 +144,7 @@ namespace Complete
         public void OnPhotonInstantiate(PhotonMessageInfo info)
         {
             GameObject.Find("CameraRig").GetComponent<CameraControlNetwork>().SetCameraTargets();
+            ColorSystem.Instance.SetCustomColor(photonView.ViewID, PhotonNetwork.LocalPlayer.CustomProperties["color"].ToString());
         }
     }
 }

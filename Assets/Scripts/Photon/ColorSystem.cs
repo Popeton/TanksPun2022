@@ -14,7 +14,7 @@ public class ColorSystem : MonoBehaviourPun, IOnEventCallback
         Instance = this;
     }
 
-    private const byte ColorEventCode = 0;
+    private const byte ColorEventCode = 2;
     private Renderer playerRenderer;
 
     private void Start()
@@ -59,7 +59,7 @@ public class ColorSystem : MonoBehaviourPun, IOnEventCallback
     {
         int objId = (int)data[0];
         Color color = ToColor((string)data[1]);
-        if (this.photonView.ViewID == objId)
+        if (photonView.ViewID == objId)
         {
             playerRenderer.material.color = color;
         }
