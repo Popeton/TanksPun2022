@@ -7,19 +7,12 @@ using ExitGames.Client.Photon;
 
 public class ColorSystem : MonoBehaviourPun, IOnEventCallback
 {
-    public static ColorSystem Instance;
-
-    public void Awake()
-    {
-        Instance = this;
-    }
-
     private const byte ColorEventCode = 2;
-    private Renderer playerRenderer;
+    [SerializeField] private Material playerColor;
 
     private void Start()
     {
-        playerRenderer = GetComponentInChildren<Renderer>();
+        SetCustomColor(photonView.ViewID, PhotonNetwork.LocalPlayer.CustomProperties["color"].ToString());
     }
 
     private void OnEnable()
@@ -32,7 +25,7 @@ public class ColorSystem : MonoBehaviourPun, IOnEventCallback
         PhotonNetwork.RemoveCallbackTarget(this);
     }
 
-    public void SetCustomColor(int id, string color)
+    private void SetCustomColor(int id, string color)
     {
         object[] data = new object[2];
         data[0] = id;
@@ -61,7 +54,7 @@ public class ColorSystem : MonoBehaviourPun, IOnEventCallback
         Color color = ToColor((string)data[1]);
         if (photonView.ViewID == objId)
         {
-            playerRenderer.material.color = color;
+            playerColor.color = color;
         }
     }
 

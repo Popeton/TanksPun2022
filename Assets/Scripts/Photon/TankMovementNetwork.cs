@@ -144,7 +144,6 @@ namespace Complete
         public void OnPhotonInstantiate(PhotonMessageInfo info)
         {
             GameObject.Find("CameraRig").GetComponent<CameraControlNetwork>().SetCameraTargets();
-            ColorSystem.Instance.SetCustomColor(photonView.ViewID, PhotonNetwork.LocalPlayer.CustomProperties["color"].ToString());
         }
     }
 }
